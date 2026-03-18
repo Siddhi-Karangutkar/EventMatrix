@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Event = require('../models/Event');
+const Registration = require('../models/Registration');
 
 // Fetch approved and posted events for students
 router.get('/browse', async (req, res) => {
@@ -79,5 +80,98 @@ router.put('/post/:id', async (req, res) => {
     }
 });
 
+
+const mongoose = require('mongoose');
+
+// Get current attendance status (Club)
+router.get('/:id/attendance', async (req, res) => {
+    try {
+        const event = await Event.findById(req.params.id);
+        if (!event) return res.status(404).json({ message: 'Event not found' });
+
+        const active = event.attendanceCode && new Date() < new Date(event.attendanceCodeExpires);
+        res.json({
+            code: active ? event.attendanceCode : null,
+            expires: active ? event.attendanceCodeExpires : null,
+            active
+        });
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to fetch attendance status' });
+    }
+});
+
+// Generate attendance code (Club)
+router.post('/:id/attendance/generate', async (req, res) => {
+    try {
+        const event = await Event.findById(req.params.id);
+        if (!event) return res.status(404).json({ message: 'Event not found' });
+
+        // Check if there's already an active code
+        if (event.attendanceCode && new Date() < new Date(event.attendanceCodeExpires)) {
+            return res.json({
+                message: 'Existing code is still active',
+                code: event.attendanceCode,
+                expires: event.attendanceCodeExpires
+            });
+        }
+
+        const code = Math.floor(1000 + Math.random() * 9000).toString();
+        const expires = new Date(Date.now() + 3 * 60 * 1000); // 3 minutes
+
+        event.attendanceCode = code;
+        event.attendanceCodeExpires = expires;
+        await event.save();
+
+        res.json({ message: 'Attendance code generated', code, expires });
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to generate code' });
+    }
+});
+
+// Mark attendance (Student)
+router.post('/:id/attendance/mark', async (req, res) => {
+    try {
+        const { studentId, code } = req.body;
+        console.log(`Marking attendance for student ${studentId} with code ${code} for event ${req.params.id}`);
+
+        const event = await Event.findById(req.params.id);
+        if (!event) {
+            console.log("Event not found");
+            return res.status(404).json({ message: 'Event not found' });
+        }
+
+        if (!event.attendanceCode || event.attendanceCode !== code) {
+            console.log(`Code mismatch: Expected ${event.attendanceCode}, got ${code}`);
+            return res.status(400).json({ message: 'Invalid attendance code' });
+        }
+
+        if (new Date() > new Date(event.attendanceCodeExpires)) {
+            console.log("Attendance code expired");
+            return res.status(400).json({ message: 'Attendance code has expired' });
+        }
+
+        // Use new mongoose.Types.ObjectId() for explicit matching in nested fields
+        const registration = await Registration.findOneAndUpdate(
+            {
+                'event.id': new mongoose.Types.ObjectId(req.params.id),
+                'student.id': new mongoose.Types.ObjectId(studentId),
+                status: 'approved'
+            },
+            { attendanceStatus: 'present' },
+            { new: true }
+        );
+
+        if (!registration) {
+            console.log(`Registration not found for student ${studentId} and event ${req.params.id} with status approved`);
+            return res.status(404).json({ message: 'Approved registration not found for this event. Please ensure your registration is approved.' });
+        }
+
+        console.log("Attendance marked successfully");
+        res.json({ message: 'Attendance marked successfully', registration });
+    } catch (err) {
+        console.error("Attendance marking error:", err);
+        res.status(500).json({ message: 'Failed to mark attendance' });
+    }
+});
 
 module.exports = router;

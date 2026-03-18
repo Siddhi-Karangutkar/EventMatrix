@@ -17,8 +17,8 @@ import StudentDashboard from './pages/StudentDashboard/StudentDashboard';
 import StudentNotifications from './pages/StudentDashboard/StudentNotifications';
 import BrowseEvents from './pages/BrowseEvents/BrowseEvents';
 import RegisteredEvents from './pages/StudentDashboard/RegisteredEvents';
+import AttendedEvents from './pages/StudentDashboard/AttendedEvents';
 import {
-  AttendedEvents,
   StudentProfile,
 } from './pages/StudentDashboard/Placeholders';
 
@@ -47,13 +47,13 @@ import EditEvent from './pages/Club/EditEvent';
 import ClubEventStatus from './pages/Club/ClubEventStatus';
 import ClubNotifications from './pages/Club/ClubNotifications';
 import ClubApproveStudents from './pages/Club/ApproveStudents';
+import ClubAttendance from './pages/Club/ClubAttendance';
 import {
   ClubPostedEvents,
   ClubCertificates,
   ClubAnnouncements,
   ClubFeedback,
   ClubBudget,
-  ClubAttendance,
   ClubProfile,
 } from './pages/Club/ClubPlaceholders';
 

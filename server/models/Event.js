@@ -34,6 +34,8 @@ const EventSchema = new mongoose.Schema({
     status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
     isPosted: { type: Boolean, default: false },
     rejectionReason: { type: String },
+    attendanceCode: { type: String },
+    attendanceCodeExpires: { type: Date },
     createdAt: { type: Date, default: Date.now }
 });
 

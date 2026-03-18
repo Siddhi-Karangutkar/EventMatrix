@@ -24,6 +24,11 @@ const registrationSchema = new mongoose.Schema({
     transactionID: { type: String }, // For paid events
     paymentUsername: { type: String }, // Name/ID used for payment
     rejectionReason: { type: String },
+    attendanceStatus: {
+        type: String,
+        enum: ['absent', 'present'],
+        default: 'absent'
+    },
     registeredAt: {
         type: Date,
         default: Date.now

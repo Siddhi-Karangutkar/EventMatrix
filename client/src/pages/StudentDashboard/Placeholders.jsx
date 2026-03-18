@@ -9,5 +9,4 @@ const PlaceholderPage = ({ title }) => (
 
 export const BrowseEvents = () => <PlaceholderPage title="Browse Events" />;
 export const RegisteredEvents = () => <PlaceholderPage title="Registered Events" />;
-export const AttendedEvents = () => <PlaceholderPage title="Attended Events" />;
 export const StudentProfile = () => <PlaceholderPage title="My Profile" />;

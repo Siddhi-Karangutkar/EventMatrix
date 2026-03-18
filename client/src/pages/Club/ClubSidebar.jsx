@@ -26,7 +26,7 @@ const ClubSidebar = ({ isOpen, setIsOpen }) => {
         { name: 'Dashboard', path: '/club/dashboard', icon: <LayoutDashboard size={20} /> },
         { name: 'Approve Students', path: '/club/approve-students', icon: <Users size={20} /> },
         { name: 'Create Events', path: '/club/create-event', icon: <CalendarPlus size={20} /> },
-        { name: 'Events Posted', path: '/club/posted-events', icon: <Building2 size={20} /> },
+        // { name: 'Events Posted', path: '/club/posted-events', icon: <Building2 size={20} /> },
         { name: 'Approved/Rejected', path: '/club/event-status', icon: <CalendarCheck size={20} /> },
         { name: 'Notifications', path: '/club/notifications', icon: <Bell size={20} /> },
         { name: 'Certificate Gen', path: '/club/certificates', icon: <Award size={20} /> },

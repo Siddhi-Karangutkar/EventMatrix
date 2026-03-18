@@ -15,5 +15,5 @@ export const ClubCertificates = () => <ClubPlaceholder title="Auto Certificate G
 export const ClubAnnouncements = () => <ClubPlaceholder title="Emergency Announcements" />;
 export const ClubFeedback = () => <ClubPlaceholder title="Feedback Analysis" />;
 export const ClubBudget = () => <ClubPlaceholder title="Budget Tracker" />;
-export const ClubAttendance = () => <ClubPlaceholder title="Attendance Management" />;
+// Club portal
 export const ClubProfile = () => <ClubPlaceholder title="Club Profile" />;

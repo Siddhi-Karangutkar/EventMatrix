@@ -16,3 +16,6 @@ export const getClubEvents = (clubId) => API.get(`/club/${clubId}`);
 export const updateEvent = (id, data) => API.put(`/update/${id}`, data);
 export const postEvent = (id) => API.put(`/post/${id}`);
 export const browseEvents = () => API.get('/browse');
+export const generateAttendanceCode = (id) => API.post(`/${id}/attendance/generate`);
+export const markAttendance = (id, data) => API.post(`/${id}/attendance/mark`, data);
+export const getAttendanceStatus = (id) => API.get(`/${id}/attendance`);

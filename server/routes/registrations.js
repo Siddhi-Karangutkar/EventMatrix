@@ -101,4 +101,41 @@ router.put('/status/:id', async (req, res) => {
     }
 });
 
+// Club: Get attendees for a specific event
+router.get('/event/:eventId/attendees', async (req, res) => {
+    try {
+        const registrations = await Registration.find({ 'event.id': req.params.eventId, status: 'approved' })
+            .select('student attendanceStatus')
+            .sort({ 'student.name': 1 });
+        res.json(registrations);
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to fetch attendees' });
+    }
+});
+
+// Club: Manually mark attendance
+router.patch('/:id/manual-attendance', async (req, res) => {
+    try {
+        const { status } = req.body; // 'present' or 'absent'
+        console.log(`Manually marking attendance for registration ${req.params.id} to status ${status}`);
+
+        const registration = await Registration.findByIdAndUpdate(
+            req.params.id,
+            { attendanceStatus: status },
+            { new: true }
+        );
+
+        if (!registration) {
+            console.log(`Registration ${req.params.id} not found for manual attendance update`);
+            return res.status(404).json({ message: 'Registration not found' });
+        }
+
+        console.log(`Attendance updated successfully for ${registration.student.name}`);
+        res.json({ message: 'Attendance status updated', registration });
+    } catch (err) {
+        console.error("Manual attendance update error:", err);
+        res.status(500).json({ message: 'Failed to update attendance' });
+    }
+});
+
 module.exports = router;
