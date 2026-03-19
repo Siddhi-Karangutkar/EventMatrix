@@ -4,8 +4,8 @@ const sendApprovalEmail = async (clubEmail, clubName, headName) => {
     try {
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
-            port: 465,
-            secure: true, // Use SSL
+            port: 587,
+            secure: false, // Use STARTTLS
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
@@ -13,7 +13,6 @@ const sendApprovalEmail = async (clubEmail, clubName, headName) => {
             tls: {
                 rejectUnauthorized: false
             },
-            // Force IPv4 to resolve the ENETUNREACH error on some cloud providers
             family: 4, 
             connectionTimeout: 10000,
             greetingTimeout: 10000,

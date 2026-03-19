@@ -20,17 +20,15 @@ router.put('/approve-club/:id', async (req, res) => {
         const club = await Club.findByIdAndUpdate(req.params.id, { isApproved: true }, { new: true });
         if (!club) return res.status(404).json({ message: 'Club not found' });
 
-        // Send approval email
-        const emailSent = await sendApprovalEmail(club.email, club.name, club.headName);
+        // Send approval email in the background (don't await) to prevent UI hang
+        sendApprovalEmail(club.email, club.name, club.headName).catch(err => {
+            console.error('Background Email Error:', err);
+        });
 
-        if (emailSent) {
-            res.json({ message: 'Club approved successfully and notification email sent.', club });
-        } else {
-            res.json({ 
-                message: 'Club approved successfully, but the notification email failed to send. Please check your server SMTP settings (EMAIL_USER/EMAIL_PASS).', 
-                club 
-            });
-        }
+        res.json({ 
+            message: 'Club approved successfully! Notification is being sent in the background.', 
+            club 
+        });
     } catch (err) {
         res.status(500).json({ message: 'Server error approving club' });
     }
