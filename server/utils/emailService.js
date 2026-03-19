@@ -1,9 +1,16 @@
 const nodemailer = require('nodemailer');
+const dns = require('dns');
+
+// Fix for Render: Forces Node.js to prioritize IPv4 over IPv6
+dns.setDefaultResultOrder('ipv4first');
 
 const sendApprovalEmail = async (clubEmail, clubName, headName) => {
     try {
         const transporter = nodemailer.createTransport({
-            service: 'gmail',
+            // Changed from service: 'gmail' to explicit host and port for better reliability on Render
+            host: 'smtp.gmail.com', 
+            port: 465,
+            secure: true, 
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
