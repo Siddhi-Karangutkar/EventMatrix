@@ -9,7 +9,15 @@ const sendApprovalEmail = async (clubEmail, clubName, headName) => {
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
-            }
+            },
+            tls: {
+                rejectUnauthorized: false
+            },
+            // Force IPv4 to resolve the ENETUNREACH error on some cloud providers
+            family: 4, 
+            connectionTimeout: 10000,
+            greetingTimeout: 10000,
+            socketTimeout: 10000
         });
 
         const mailOptions = {
