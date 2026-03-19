@@ -26,7 +26,7 @@ router.put('/approve-club/:id', async (req, res) => {
         });
 
         res.json({ 
-            message: 'Club approved successfully! Notification is being sent in the background.', 
+            message: 'Club approved successfully!', 
             club 
         });
     } catch (err) {
