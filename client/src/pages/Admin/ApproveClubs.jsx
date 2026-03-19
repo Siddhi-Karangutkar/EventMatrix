@@ -8,6 +8,7 @@ const ApproveClubs = () => {
     const [clubs, setClubs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [rejectionModal, setRejectionModal] = useState({ show: false, clubId: null, reason: '' });
+    const [processingId, setProcessingId] = useState(null);
 
     useEffect(() => {
         fetchClubs();
@@ -25,12 +26,16 @@ const ApproveClubs = () => {
     };
 
     const handleApprove = async (id) => {
+        setProcessingId(id);
         try {
-            await approveClub(id);
-            toast.success('Club approved successfully!');
+            const res = await approveClub(id);
+            toast.success(res.data.message || 'Club approved successfully!');
             setClubs(clubs.filter(club => club._id !== id));
         } catch (err) {
-            toast.error('Approval failed');
+            console.error(err);
+            toast.error(err.response?.data?.message || 'Approval failed');
+        } finally {
+            setProcessingId(null);
         }
     };
 
@@ -90,10 +95,22 @@ const ApproveClubs = () => {
                             </div>
 
                             <div className="card-actions">
-                                <button className="btn approve-btn" onClick={() => handleApprove(club._id)}>
-                                    <CheckCircle size={18} /> Approve
+                                <button 
+                                    className={`btn approve-btn ${processingId === club._id ? 'loading' : ''}`} 
+                                    onClick={() => handleApprove(club._id)}
+                                    disabled={processingId !== null}
+                                >
+                                    {processingId === club._id ? (
+                                        <>Approving...</>
+                                    ) : (
+                                        <><CheckCircle size={18} /> Approve</>
+                                    )}
                                 </button>
-                                <button className="btn reject-btn" onClick={() => handleRejectClick(club._id)}>
+                                <button 
+                                    className="btn reject-btn" 
+                                    onClick={() => handleRejectClick(club._id)}
+                                    disabled={processingId !== null}
+                                >
                                     <XCircle size={18} /> Reject
                                 </button>
                             </div>
