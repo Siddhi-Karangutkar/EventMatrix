@@ -1,15 +1,12 @@
-import axios from 'axios';
+import api from './index';
 
-const API = axios.create({ baseURL: 'http://localhost:5001/api/admin' });
-
-// Add token to headers for protected routes
-API.interceptors.request.use((req) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-        req.headers.Authorization = `Bearer ${token}`;
-    }
-    return req;
-});
+// Use the centralized api instance and prefix all paths with /admin
+const API = {
+    get: (url, config) => api.get(`/admin${url}`, config),
+    post: (url, data, config) => api.post(`/admin${url}`, data, config),
+    put: (url, data, config) => api.put(`/admin${url}`, data, config),
+    delete: (url, config) => api.delete(`/admin${url}`, config),
+};
 
 export const getPendingClubs = () => API.get('/pending-clubs');
 export const approveClub = (id) => API.put(`/approve-club/${id}`);

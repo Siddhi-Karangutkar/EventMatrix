@@ -1,14 +1,12 @@
-import axios from 'axios';
+import api from './index';
 
-const API = axios.create({ baseURL: 'http://localhost:5001/api/events' });
-
-API.interceptors.request.use((req) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-        req.headers.Authorization = `Bearer ${token}`;
-    }
-    return req;
-});
+// Use the centralized api instance and prefix all paths with /events
+const API = {
+    get: (url, config) => api.get(`/events${url}`, config),
+    post: (url, data, config) => api.post(`/events${url}`, data, config),
+    put: (url, data, config) => api.put(`/events${url}`, data, config),
+    delete: (url, config) => api.delete(`/events${url}`, config),
+};
 
 export const createEvent = (data) => API.post('/create', data);
 export const getEventById = (id) => API.get(`/${id}`);
