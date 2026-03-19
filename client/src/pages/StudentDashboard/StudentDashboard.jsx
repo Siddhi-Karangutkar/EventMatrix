@@ -1,52 +1,60 @@
-import React from 'react';
-import { CalendarCheck, CheckCircle, Clock } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { CalendarCheck, CheckCircle, Clock, Loader2 } from 'lucide-react';
 import EventCard from '../../components/EventCard/EventCard';
+import { getStudentProfile } from '../../api/student';
+import { browseEvents } from '../../api/events';
 import './StudentDashboard.css';
 
-const MOCK_EVENTS = [
-    {
-        id: 1,
-        title: "Annual Tech Symposium 2026",
-        clubName: "Computer Science Club",
-        date: "Mar 15, 2026",
-        time: "09:00 AM",
-        venue: "Main Auditorium",
-        participants: 450,
-        type: "Free",
-        isTrending: true,
-        image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        id: 2,
-        title: "Introduction to Machine Learning Workshop",
-        clubName: "AI Society",
-        date: "Mar 18, 2026",
-        time: "02:00 PM",
-        venue: "Lab 4, Tech Block",
-        participants: 120,
-        type: "Free",
-        isTrending: false,
-        image: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        id: 3,
-        title: "Spring Cultural Fest: Resonance",
-        clubName: "Cultural Committee",
-        date: "Apr 05, 2026",
-        time: "05:00 PM",
-        venue: "College Grounds",
-        participants: 1200,
-        type: "Paid",
-        isTrending: true,
-        image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=600&q=80"
-    }
-];
-
 const StudentDashboard = () => {
+    const [loading, setLoading] = useState(true);
+    const [stats, setStats] = useState({ registrations: 0, attended: 0, pending: 0 });
+    const [events, setEvents] = useState([]);
+    const [studentName, setStudentName] = useState('');
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const user = JSON.parse(localStorage.getItem('user'));
+                if (!user || !user.id) return;
+
+                setStudentName(user.name.split(' ')[0]);
+
+                const [profileRes, eventsRes] = await Promise.all([
+                    getStudentProfile(user.id),
+                    browseEvents()
+                ]);
+
+                if (profileRes.data && profileRes.data.stats) {
+                    setStats(profileRes.data.stats);
+                }
+
+                if (eventsRes.data) {
+                    // Show top 3 events as "Recommended"
+                    setEvents(eventsRes.data.slice(0, 3));
+                }
+            } catch (err) {
+                console.error('Error fetching dashboard data:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="dashboard-loading">
+                <Loader2 className="animate-spin" size={48} />
+                <p>Loading your dashboard...</p>
+            </div>
+        );
+    }
+
     return (
         <div className="dashboard-container animate-fade-in">
             <div className="dashboard-header">
-                <h1 className="dashboard-title">Welcome back, John! 👋</h1>
+                <h1 className="dashboard-title">Welcome back, {studentName}! 👋</h1>
                 <p className="dashboard-subtitle">Here's what's happening around campus.</p>
             </div>
 
@@ -56,7 +64,7 @@ const StudentDashboard = () => {
                     <div className="stat-icon"><CalendarCheck size={28} /></div>
                     <div className="stat-content">
                         <h3>Registered</h3>
-                        <span className="stat-value">5</span>
+                        <span className="stat-value">{stats.registrations}</span>
                         <p>Upcoming events</p>
                     </div>
                 </div>
@@ -65,7 +73,7 @@ const StudentDashboard = () => {
                     <div className="stat-icon"><CheckCircle size={28} /></div>
                     <div className="stat-content">
                         <h3>Attended</h3>
-                        <span className="stat-value">12</span>
+                        <span className="stat-value">{stats.attended}</span>
                         <p>Past events</p>
                     </div>
                 </div>
@@ -74,7 +82,7 @@ const StudentDashboard = () => {
                     <div className="stat-icon"><Clock size={28} /></div>
                     <div className="stat-content">
                         <h3>Pending</h3>
-                        <span className="stat-value">2</span>
+                        <span className="stat-value">{stats.pending}</span>
                         <p>Awaiting approval</p>
                     </div>
                 </div>
@@ -87,11 +95,17 @@ const StudentDashboard = () => {
                     <a href="/student/browse" className="view-all-link">Browse All</a>
                 </div>
 
-                <div className="events-grid">
-                    {MOCK_EVENTS.map(event => (
-                        <EventCard key={event.id} event={event} />
-                    ))}
-                </div>
+                {events.length > 0 ? (
+                    <div className="events-grid">
+                        {events.map(event => (
+                            <EventCard key={event._id} event={event} />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="no-events-card glass-panel">
+                        <p>No upcoming events recommended at the moment. Check back later!</p>
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -18,8 +18,8 @@ import StudentNotifications from './pages/StudentDashboard/StudentNotifications'
 import BrowseEvents from './pages/BrowseEvents/BrowseEvents';
 import RegisteredEvents from './pages/StudentDashboard/RegisteredEvents';
 import AttendedEvents from './pages/StudentDashboard/AttendedEvents';
+import StudentProfile from './pages/StudentDashboard/StudentProfile';
 import {
-  StudentProfile,
 } from './pages/StudentDashboard/Placeholders';
 
 // Admin Portal
@@ -30,12 +30,16 @@ import AdminCollegeCode from './pages/Admin/AdminCollegeCode';
 import ApproveClubs from './pages/Admin/ApproveClubs';
 import ApproveEvents from './pages/Admin/ApproveEvents';
 import EventsConducted from './pages/Admin/EventsConducted';
+import AdminNotifications from './pages/Admin/AdminNotifications';
+import AdminStudents from './pages/Admin/AdminStudents';
+import AdminClubs from './pages/Admin/AdminClubs';
+import AdminAnnouncements from './pages/Admin/AdminAnnouncements';
+import AdminProfile from './pages/Admin/AdminProfile';
 import {
-  AdminStudents,
-  AdminClubs,
   AdminEvents,
-  AdminProfile,
 } from './pages/Admin/AdminPlaceholders';
+import ClubAnnouncements from './pages/Club/ClubAnnouncements';
+import ClubBudget from './pages/Club/ClubBudget';
 
 // Club Portal
 import ClubLogin from './pages/Club/ClubLogin';
@@ -48,13 +52,14 @@ import ClubEventStatus from './pages/Club/ClubEventStatus';
 import ClubNotifications from './pages/Club/ClubNotifications';
 import ClubApproveStudents from './pages/Club/ApproveStudents';
 import ClubAttendance from './pages/Club/ClubAttendance';
+import ManageEvents from './pages/Club/ManageEvents';
+import ManageEditEvent from './pages/Club/ManageEditEvent';
+import ClubFeedback from './pages/Club/ClubFeedback';
+import ClubProfile from './pages/Club/ClubProfile';
+import ClubCertificates from './pages/Club/ClubCertificates';
+import ProtectedRoute from './components/ProtectedRoute';
 import {
   ClubPostedEvents,
-  ClubCertificates,
-  ClubAnnouncements,
-  ClubFeedback,
-  ClubBudget,
-  ClubProfile,
 } from './pages/Club/ClubPlaceholders';
 
 /* ── Wrappers ─────────────────────────────────────────────── */
@@ -88,7 +93,7 @@ function App() {
         <Route path="/student/register" element={<AuthWrapper><StudentRegister /></AuthWrapper>} />
 
         {/* Student Portal */}
-        <Route path="/student" element={<StudentLayout />}>
+        <Route path="/student" element={<ProtectedRoute><StudentLayout /></ProtectedRoute>}>
           <Route path="dashboard" element={<StudentDashboard />} />
           <Route path="notifications" element={<StudentNotifications />} />
           <Route path="browse" element={<BrowseEvents />} />
@@ -101,7 +106,7 @@ function App() {
         <Route path="/admin/login" element={<AuthWrapper><AdminLogin /></AuthWrapper>} />
 
         {/* Admin Portal */}
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="students" element={<AdminStudents />} />
           <Route path="clubs" element={<AdminClubs />} />
@@ -110,6 +115,8 @@ function App() {
           <Route path="approve-events" element={<ApproveEvents />} />
           <Route path="conducted-events" element={<EventsConducted />} />
           <Route path="college-code" element={<AdminCollegeCode />} />
+          <Route path="announcements" element={<AdminAnnouncements />} />
+          <Route path="notifications" element={<AdminNotifications />} />
           <Route path="profile" element={<AdminProfile />} />
         </Route>
 
@@ -118,7 +125,7 @@ function App() {
         <Route path="/club/register" element={<AuthWrapper><ClubRegister /></AuthWrapper>} />
 
         {/* Club Portal */}
-        <Route path="/club" element={<ClubLayout />}>
+        <Route path="/club" element={<ProtectedRoute><ClubLayout /></ProtectedRoute>}>
           <Route path="dashboard" element={<ClubDashboard />} />
           <Route path="notifications" element={<ClubNotifications />} />
           <Route path="create-event" element={<CreateEvent />} />
@@ -131,6 +138,8 @@ function App() {
           <Route path="feedback" element={<ClubFeedback />} />
           <Route path="budget" element={<ClubBudget />} />
           <Route path="attendance" element={<ClubAttendance />} />
+          <Route path="manage-events" element={<ManageEvents />} />
+          <Route path="manage-edit/:id" element={<ManageEditEvent />} />
           <Route path="profile" element={<ClubProfile />} />
         </Route>
 

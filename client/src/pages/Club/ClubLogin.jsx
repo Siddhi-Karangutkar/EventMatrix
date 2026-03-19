@@ -13,6 +13,14 @@ const ClubLogin = () => {
     });
     const [loading, setLoading] = useState(false);
 
+    React.useEffect(() => {
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (token && user) {
+            navigate('/club/dashboard', { replace: true });
+        }
+    }, [navigate]);
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };

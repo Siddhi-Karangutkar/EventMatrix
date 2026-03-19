@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Sparkles, Navigation, Users } from 'lucide-react';
+import { ArrowRight, Sparkles, Hash, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import './Hero.css';
 
@@ -23,7 +23,7 @@ const Hero = () => {
           </h1>
 
           <p className="hero-description animate-fade-in" style={{ animationDelay: '0.3s' }}>
-            EventMatrix is the ultimate platform uniting students, clubs, and administration. Smart recommendations, one-click registrations, QR attendance, and massive engagement—all in one place.
+            EventMatrix is the ultimate platform uniting students, clubs, and administration. Smart recommendations, one-click registrations, Code attendance, and massive engagement—all in one place.
           </p>
 
           <div className="hero-actions animate-fade-in" style={{ animationDelay: '0.4s' }}>
@@ -38,11 +38,11 @@ const Hero = () => {
           <div className="hero-stats animate-fade-in" style={{ animationDelay: '0.6s' }}>
             <div className="stat-card glass-panel animate-float">
               <div className="stat-icon-wrapper blue">
-                <Navigation size={24} />
+                <Hash size={24} />
               </div>
               <div className="stat-info">
                 <h3>Smart Tracking</h3>
-                <p>QR based attendance instantly</p>
+                <p>Code based attendance instantly</p>
               </div>
             </div>
 

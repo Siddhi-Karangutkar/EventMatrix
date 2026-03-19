@@ -12,6 +12,7 @@ const StudentRegister = () => {
         email: '',
         password: '',
         confirmPassword: '',
+        studentId: '',
         collegeCode: ''
     });
     const [loading, setLoading] = useState(false);
@@ -28,8 +29,8 @@ const StudentRegister = () => {
 
         setLoading(true);
         try {
-            const { name, email, password, collegeCode } = formData;
-            const res = await studentRegister({ name, email, password, collegeCode });
+            const { name, email, password, studentId, collegeCode } = formData;
+            const res = await studentRegister({ name, email, password, studentId, collegeCode });
 
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('user', JSON.stringify(res.data.student));
@@ -73,10 +74,18 @@ const StudentRegister = () => {
                     </div>
 
                     <div className="form-group">
-                        <label>College Code (Optional)</label>
+                        <label>Student ID (Roll No / UID)</label>
+                        <div className="input-with-icon">
+                            <User size={18} className="input-icon" />
+                            <input type="text" name="studentId" placeholder="2021001" value={formData.studentId} onChange={handleChange} required />
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <label>College Code</label>
                         <div className="input-with-icon">
                             <Hash size={18} className="input-icon" />
-                            <input type="text" name="collegeCode" placeholder="XYZ123" value={formData.collegeCode} onChange={handleChange} />
+                            <input type="text" name="collegeCode" placeholder="XYZ123" value={formData.collegeCode} onChange={handleChange} required />
                         </div>
                     </div>
 

@@ -17,10 +17,16 @@ const studentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    studentId: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
+    },
     collegeCode: {
         type: String,
-        trim: true,
-        default: null
+        required: true,
+        trim: true
     }
 }, { timestamps: true });
 

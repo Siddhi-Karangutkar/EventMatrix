@@ -57,9 +57,9 @@ const Navbar = () => {
 
                 {/* Desktop Menu */}
                 <div className="nav-links desktop-only">
-                    <a href="#features" className="nav-link">Features</a>
-                    <a href="#about" className="nav-link">About</a>
-                    <a href="#portals" className="nav-link">Portals</a>
+                    <a href="/#features" className="nav-link">Features</a>
+                    <a href="/#about" className="nav-link">About</a>
+                    <a href="/#portals" className="nav-link">Portals</a>
                 </div>
 
                 <div className="nav-actions desktop-only">
@@ -85,9 +85,9 @@ const Navbar = () => {
             {isOpen && (
                 <div className="mobile-menu">
                     <div className="container">
-                        <a href="#features" className="mobile-link" onClick={() => setIsOpen(false)}>Features</a>
-                        <a href="#about" className="mobile-link" onClick={() => setIsOpen(false)}>About</a>
-                        <a href="#portals" className="mobile-link" onClick={() => setIsOpen(false)}>Portals</a>
+                        <a href="/#features" className="mobile-link" onClick={() => setIsOpen(false)}>Features</a>
+                        <a href="/#about" className="mobile-link" onClick={() => setIsOpen(false)}>About</a>
+                        <a href="/#portals" className="mobile-link" onClick={() => setIsOpen(false)}>Portals</a>
                         <hr className="divider" />
                         <Link to="/student/login" className="mobile-link" onClick={() => setIsOpen(false)}>Student Login</Link>
                         <Link to="/club/login" className="mobile-link highlight" onClick={() => setIsOpen(false)}>Club Portal</Link>

@@ -7,7 +7,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -35,11 +35,19 @@ const adminRoutes = require('./routes/admin');
 const eventRoutes = require('./routes/events');
 const registrationRoutes = require('./routes/registrations');
 const notificationRoutes = require('./routes/notifications');
+const announcementRoutes = require('./routes/announcements');
+const budgetRoutes = require('./routes/budget');
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/registrations', registrationRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/announcements', announcementRoutes);
+app.use('/api/budget', budgetRoutes);
+app.use('/api/admin-notifications', require('./routes/adminNotifications'));
+app.use('/api/feedback', require('./routes/feedback'));
+app.use('/api/student', require('./routes/student'));
+app.use('/api/club', require('./routes/club'));
 
 // Basic Route for testing
 app.get("/", (req, res) => {

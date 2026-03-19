@@ -34,6 +34,14 @@ const clubSchema = new mongoose.Schema({
     isApproved: {
         type: Boolean,
         default: false
+    },
+    signatureUrl: {
+        type: String,
+        trim: true
+    },
+    sealUrl: {
+        type: String,
+        trim: true
     }
 }, { timestamps: true });
 

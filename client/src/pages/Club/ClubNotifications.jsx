@@ -1,68 +1,92 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, CheckCircle, XCircle, Clock, Info } from 'lucide-react';
-import { getClubEvents } from '../../api/events';
+import { Bell, CheckCircle, XCircle, Clock, Info, Check } from 'lucide-react';
+import { getClubNotifications, markClubNotificationRead, markAllClubNotificationsRead } from '../../api/notifications';
+import { toast } from 'react-toastify';
 import './ClubNotifications.css';
 
 const ClubNotifications = () => {
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [clubId, setClubId] = useState(null);
 
     useEffect(() => {
         const club = JSON.parse(localStorage.getItem('user'));
-        if (club) fetchNotifications();
+        if (club) {
+            const id = club.id || club._id;
+            setClubId(id);
+            fetchNotifications(id);
+        }
     }, []);
 
-    const fetchNotifications = async () => {
+    const fetchNotifications = async (id) => {
         try {
-            const club = JSON.parse(localStorage.getItem('user')); // Re-fetch club here for consistency or pass it
-            if (!club) {
-                setLoading(false);
-                return;
-            }
-            const res = await getClubEvents(club.id || club._id);
-            // We'll treat status changes as "notifications" for now
-            const events = res.data.map(event => ({
-                id: event._id,
-                title: event.title,
-                status: event.status,
-                reason: event.rejectionReason,
-                time: event.updatedAt || event.createdAt,
-                type: event.status === 'pending' ? 'info' : event.status === 'approved' ? 'success' : 'error'
-            }));
-            setNotifications(events.sort((a, b) => new Date(b.time) - new Date(a.time)));
+            const res = await getClubNotifications(id);
+            setNotifications(res.data);
             setLoading(false);
         } catch (err) {
+            toast.error('Failed to fetch notifications');
             setLoading(false);
+        }
+    };
+
+    const handleMarkRead = async (id) => {
+        try {
+            await markClubNotificationRead(id);
+            setNotifications(notifications.map(n => n._id === id ? { ...n, read: true } : n));
+        } catch (err) {
+            toast.error('Failed to mark as read');
+        }
+    };
+
+    const handleMarkAllRead = async () => {
+        try {
+            await markAllClubNotificationsRead(clubId);
+            setNotifications(notifications.map(n => ({ ...n, read: true })));
+            toast.success('All marked as read');
+        } catch (err) {
+            toast.error('Failed to update notifications');
         }
     };
 
     if (loading) return <div className="loading-spinner">Fetching alerts...</div>;
 
+    const unreadCount = notifications.filter(n => !n.read).length;
+
     return (
         <div className="notifications-container animate-fade-in">
             <div className="dashboard-header">
-                <h1 className="dashboard-title">Notifications</h1>
-                <p className="dashboard-subtitle">Stay updated on your event proposals and registration activity.</p>
+                <div>
+                    <h1 className="dashboard-title">Notifications</h1>
+                    <p className="dashboard-subtitle">Stay updated on your event proposals and administration alerts.</p>
+                </div>
+                {unreadCount > 0 && (
+                    <button className="btn-mark-all" onClick={handleMarkAllRead}>
+                        Mark all as read
+                    </button>
+                )}
             </div>
 
             <div className="notifications-list glass-panel">
                 {notifications.length > 0 ? (
                     notifications.map(n => (
-                        <div key={n.id} className={`notification-item ${n.type}`}>
+                        <div key={n._id} className={`notification-item ${n.type} ${n.read ? 'read' : 'unread'}`}>
                             <div className="n-icon">
-                                {n.status === 'approved' && <CheckCircle size={20} />}
-                                {n.status === 'rejected' && <XCircle size={20} />}
-                                {n.status === 'pending' && <Clock size={20} />}
+                                {n.type === 'success' && <CheckCircle size={20} />}
+                                {n.type === 'error' && <XCircle size={20} />}
+                                {n.type === 'warning' && <Clock size={20} />}
+                                {n.type === 'info' && <Info size={20} />}
                             </div>
                             <div className="n-content">
-                                <p className="n-text">
-                                    Your event <strong>"{n.title}"</strong> has been {n.status}.
-                                    {n.status === 'approved' && ' You can now post it live!'}
-                                </p>
-                                {n.status === 'rejected' && (
-                                    <p className="n-reason">Reason: {n.reason}</p>
-                                )}
-                                <span className="n-time">{new Date(n.time).toLocaleString()}</span>
+                                <div className="n-header">
+                                    <h4 className="n-title">{n.title}</h4>
+                                    {!n.read && (
+                                        <button className="mark-read-btn" title="Mark as read" onClick={() => handleMarkRead(n._id)}>
+                                            <Check size={14} />
+                                        </button>
+                                    )}
+                                </div>
+                                <p className="n-text">{n.message}</p>
+                                <span className="n-time">{new Date(n.createdAt).toLocaleString()}</span>
                             </div>
                         </div>
                     ))

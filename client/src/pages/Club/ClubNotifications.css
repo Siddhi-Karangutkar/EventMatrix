@@ -12,7 +12,17 @@
     gap: 1.25rem;
     padding: 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    transition: background 0.3s;
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.notification-item.unread {
+    background: rgba(168, 85, 247, 0.05);
+    border-left: 3px solid #a855f7;
+}
+
+.notification-item.read {
+    opacity: 0.7;
 }
 
 .notification-item:hover {
@@ -21,6 +31,57 @@
 
 .notification-item:last-child {
     border-bottom: none;
+}
+
+.n-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.n-title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.mark-read-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.mark-read-btn:hover {
+    background: #a855f7;
+    color: white;
+    transform: scale(1.1);
+}
+
+.btn-mark-all {
+    background: rgba(168, 85, 247, 0.1);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    color: #a855f7;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-mark-all:hover {
+    background: #a855f7;
+    color: white;
 }
 
 .n-icon {

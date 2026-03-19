@@ -19,3 +19,10 @@ export const browseEvents = () => API.get('/browse');
 export const generateAttendanceCode = (id) => API.post(`/${id}/attendance/generate`);
 export const markAttendance = (id, data) => API.post(`/${id}/attendance/mark`, data);
 export const getAttendanceStatus = (id) => API.get(`/${id}/attendance`);
+
+// Manage Events
+export const closeRegistration = (id) => API.put(`/close-registration/${id}`);
+export const proposeEventEdit = (id, data) => API.post(`/edit-propose/${id}`, data);
+export const getClubEditedEvents = (clubId) => API.get(`/edited-events/club/${clubId}`);
+export const applyEventEdit = (editId) => API.put(`/apply-edit/${editId}`);
+export const notifyParticipants = (id) => API.post(`/notify-participants/${id}`);

@@ -10,13 +10,21 @@ import {
     Key,
     User,
     LogOut,
+    Megaphone,
+    Bell
 } from 'lucide-react';
+import { toast } from 'react-toastify';
 import './AdminSidebar.css';
 
 const AdminSidebar = ({ isOpen, setIsOpen }) => {
     const navigate = useNavigate();
 
-    const handleLogout = () => navigate('/');
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        toast.info('Logged out from Admin Console');
+        navigate('/admin/login', { replace: true });
+    };
 
     const navLinks = [
         { name: 'Dashboard', path: '/admin/dashboard', icon: <LayoutDashboard size={20} /> },
@@ -26,6 +34,8 @@ const AdminSidebar = ({ isOpen, setIsOpen }) => {
         { name: 'Approve Events', path: '/admin/approve-events', icon: <ClipboardList size={20} /> },
         { name: 'Events Conducted', path: '/admin/conducted-events', icon: <CalendarCheck size={20} /> },
         { name: 'College Code', path: '/admin/college-code', icon: <Key size={20} /> },
+        { name: 'Announcements', path: '/admin/announcements', icon: <Megaphone size={20} /> },
+        { name: 'Club Alerts', path: '/admin/notifications', icon: <Bell size={20} /> },
     ];
 
     return (

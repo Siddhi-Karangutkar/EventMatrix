@@ -7,12 +7,20 @@ import './Auth.css';
 
 const StudentLogin = () => {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         email: '',
         password: '',
         rememberMe: false
     });
-    const [loading, setLoading] = useState(false);
+
+    React.useEffect(() => {
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (token && user) {
+            navigate('/student/dashboard', { replace: true });
+        }
+    }, [navigate]);
 
     const handleChange = (e) => {
         const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;

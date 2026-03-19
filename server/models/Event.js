@@ -33,6 +33,7 @@ const EventSchema = new mongoose.Schema({
     paymentQRUrl: { type: String },
     status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
     isPosted: { type: Boolean, default: false },
+    registrationClosed: { type: Boolean, default: false },
     rejectionReason: { type: String },
     attendanceCode: { type: String },
     attendanceCodeExpires: { type: Date },

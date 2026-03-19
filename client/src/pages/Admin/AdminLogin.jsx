@@ -13,6 +13,14 @@ const AdminLogin = () => {
     });
     const [loading, setLoading] = useState(false);
 
+    React.useEffect(() => {
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (token && user) {
+            navigate('/admin/dashboard', { replace: true });
+        }
+    }, [navigate]);
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -28,6 +36,7 @@ const AdminLogin = () => {
             });
 
             localStorage.setItem('token', res.data.token);
+            localStorage.setItem('user', JSON.stringify(res.data.user));
             localStorage.setItem('userRole', 'admin');
 
             toast.success('Admin authentication successful! Access granted.');

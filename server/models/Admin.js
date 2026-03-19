@@ -14,6 +14,18 @@ const adminSchema = new mongoose.Schema({
         required: true,
         default: 'admin'
     },
+    name: {
+        type: String,
+        default: 'System Administrator'
+    },
+    profilePic: {
+        type: String,
+        default: ''
+    },
+    sealUrl: {
+        type: String,
+        default: ''
+    },
     collegeCode: {
         type: String,
         trim: true

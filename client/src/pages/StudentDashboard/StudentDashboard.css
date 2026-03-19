@@ -145,3 +145,28 @@
         grid-template-columns: 1fr;
     }
 }
+
+.dashboard-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    color: var(--text-secondary);
+    gap: 1.5rem;
+}
+
+.dashboard-loading p {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.no-events-card {
+    padding: 3rem;
+    text-align: center;
+    color: var(--text-secondary);
+    font-style: italic;
+    border: 1px dashed var(--border-color);
+    border-radius: var(--radius-lg);
+    background: rgba(var(--surface-color), 0.5);
+}

@@ -32,7 +32,9 @@ const registrationSchema = new mongoose.Schema({
     registeredAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    certificateUrl: { type: String },
+    isCertificatePosted: { type: Boolean, default: false }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Registration', registrationSchema);

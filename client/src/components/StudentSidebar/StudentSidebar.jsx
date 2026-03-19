@@ -10,14 +10,17 @@ import {
     Calendar,
     Bell
 } from 'lucide-react';
+import { toast } from 'react-toastify';
 import './StudentSidebar.css';
 
 const StudentSidebar = ({ isOpen, setIsOpen }) => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        // Session clear logic would go here
-        navigate('/student/login');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        toast.info('Logged out successfully');
+        navigate('/student/login', { replace: true });
     };
 
     const navLinks = [

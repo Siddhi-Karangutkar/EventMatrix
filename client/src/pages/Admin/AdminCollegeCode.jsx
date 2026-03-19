@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { Key, RefreshCw, Copy, CheckCircle, ShieldCheck, Trash2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Key, RefreshCw, Copy, CheckCircle, ShieldCheck, Trash2, Loader2 } from 'lucide-react';
+import { getAdminProfile, updateAdminProfile } from '../../api/admin';
+import { toast } from 'react-toastify';
 import './AdminCollegeCode.css';
 
 const generateCode = () => {
@@ -8,17 +10,48 @@ const generateCode = () => {
 };
 
 const AdminCollegeCode = () => {
-    const [code, setCode] = useState(() => localStorage.getItem('collegeCode') || '');
+    const [code, setCode] = useState('');
     const [customCode, setCustomCode] = useState('');
     const [copied, setCopied] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+
+    useEffect(() => {
+        fetchCode();
+    }, []);
+
+    const fetchCode = async () => {
+        try {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const res = await getAdminProfile(user.id || user._id);
+            setCode(res.data.collegeCode || '');
+        } catch (err) {
+            toast.error('Failed to fetch college code');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const saveCodeToDb = async (newCode) => {
+        setSaving(true);
+        try {
+            const user = JSON.parse(localStorage.getItem('user'));
+            await updateAdminProfile(user.id || user._id, { collegeCode: newCode });
+            setCode(newCode);
+            toast.success(newCode ? 'College code updated!' : 'College code deleted!');
+            setError('');
+        } catch (err) {
+            toast.error('Failed to update college code');
+        } finally {
+            setSaving(false);
+        }
+    };
 
     const handleGenerate = () => {
         const newCode = generateCode();
-        setCode(newCode);
-        localStorage.setItem('collegeCode', newCode);
-        setError('');
+        saveCodeToDb(newCode);
     };
 
     const handleCustomSave = () => {
@@ -31,10 +64,8 @@ const AdminCollegeCode = () => {
             setError('Only letters and numbers are allowed.');
             return;
         }
-        setCode(trimmed);
-        localStorage.setItem('collegeCode', trimmed);
+        saveCodeToDb(trimmed);
         setCustomCode('');
-        setError('');
     };
 
     const handleCopy = () => {
@@ -45,22 +76,28 @@ const AdminCollegeCode = () => {
 
     const handleDelete = () => {
         if (!confirmDelete) { setConfirmDelete(true); return; }
-        setCode('');
-        localStorage.removeItem('collegeCode');
+        saveCodeToDb('');
         setConfirmDelete(false);
     };
+
+    if (loading) return (
+        <div className="loader-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60vh', color: '#64748b' }}>
+            <Loader2 className="animate-spin" size={48} />
+            <p style={{ marginTop: '1rem' }}>Fetching institutional credentials...</p>
+        </div>
+    );
 
     return (
         <div className="cc-container animate-fade-in">
             <div className="dashboard-header">
                 <h1 className="dashboard-title">College Code</h1>
-                <p className="dashboard-subtitle">Generate or manage a unique 6-character code clubs use at registration.</p>
+                <p className="dashboard-subtitle">Generate or manage a unique 6-character code clubs and students use at registration.</p>
             </div>
 
             {/* Main Card */}
             <div className="cc-main-card glass-panel">
                 <div className="cc-icon-top">
-                    <Key size={40} />
+                    {saving ? <Loader2 className="animate-spin" size={40} /> : <Key size={40} />}
                 </div>
 
                 {code ? (
@@ -121,10 +158,11 @@ const AdminCollegeCode = () => {
             <div className="cc-info-card glass-panel">
                 <h4>How It Works</h4>
                 <ul>
-                    <li>🔐 Clubs enter this code during registration to associate with your college.</li>
+                    <li>🔐 Clubs & Students must enter this code during registration to associate with your college.</li>
+                    <li>🆔 Students are also required to provide their unique Institutional ID (Roll No/UID).</li>
                     <li>🔄 You can regenerate or change the code at any time.</li>
-                    <li>⚠️ Changing the code does not affect already-registered clubs.</li>
-                    <li>📋 Share this code only with authorised club representatives.</li>
+                    <li>⚠️ Changing the code does not affect already-registered users.</li>
+                    <li>📋 Share this code only with authorised institutional representatives.</li>
                 </ul>
             </div>
         </div>

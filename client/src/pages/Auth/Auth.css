@@ -1,9 +1,9 @@
 .auth-container {
     min-height: 100vh;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    padding: 2rem;
+    padding: 100px 2rem 4rem; /* Top padding for navbar (80px + 20px space) */
     background-image:
         radial-gradient(circle at top left, rgba(59, 130, 246, 0.1) 0%, transparent 40%),
         radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.1) 0%, transparent 40%);

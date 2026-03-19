@@ -7,8 +7,6 @@ const AdminPlaceholder = ({ title, icon }) => (
     </div>
 );
 
-export const AdminStudents = () => <AdminPlaceholder title="Registered Students" />;
-export const AdminClubs = () => <AdminPlaceholder title="Registered Clubs" />;
 export const AdminEvents = () => <AdminPlaceholder title="Approved Events" />;
 export const AdminApproveClubs = () => <AdminPlaceholder title="Approve Clubs" />;
 export const AdminApproveEvents = () => <AdminPlaceholder title="Approve Events" />;

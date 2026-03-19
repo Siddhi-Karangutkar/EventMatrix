@@ -11,9 +11,5 @@ export const ClubCreateEvent = () => <ClubPlaceholder title="Create New Event" /
 export const ClubPostedEvents = () => <ClubPlaceholder title="Events Created/Posted" />;
 export const ClubEventStatus = () => <ClubPlaceholder title="Approved/Rejected Events" />;
 export const ClubApproveStudents = () => <ClubPlaceholder title="Approve Student Registrations" />;
-export const ClubCertificates = () => <ClubPlaceholder title="Auto Certificate Generator" />;
 export const ClubAnnouncements = () => <ClubPlaceholder title="Emergency Announcements" />;
-export const ClubFeedback = () => <ClubPlaceholder title="Feedback Analysis" />;
 export const ClubBudget = () => <ClubPlaceholder title="Budget Tracker" />;
-// Club portal
-export const ClubProfile = () => <ClubPlaceholder title="Club Profile" />;

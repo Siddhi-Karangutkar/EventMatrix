@@ -81,7 +81,7 @@
     border: 2px solid var(--surface-color);
 }
 
-.admin-avatar {
+.admin-topbar-avatar {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -93,6 +93,7 @@
     font-weight: 700;
     font-size: 0.85rem;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .admin-content {

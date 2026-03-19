@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import { Menu, Bell, Sun, Moon } from 'lucide-react';
 import StudentSidebar from '../../components/StudentSidebar/StudentSidebar';
 import './StudentLayout.css';
@@ -32,13 +32,13 @@ const StudentLayout = () => {
                         </button>
 
                         {/* Notifications */}
-                        <button className="notification-btn">
+                        <Link to="/student/notifications" className="notification-btn">
                             <Bell size={20} />
                             <span className="notification-badge">3</span>
-                        </button>
+                        </Link>
 
                         {/* Avatar */}
-                        <div className="user-avatar">JD</div>
+                        <Link to="/student/profile" className="user-avatar">JD</Link>
                     </div>
                 </header>
 

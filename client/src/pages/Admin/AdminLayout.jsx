@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import { Menu, Bell, Sun, Moon } from 'lucide-react';
 import AdminSidebar from './AdminSidebar';
 import './AdminLayout.css';
@@ -31,11 +31,11 @@ const AdminLayout = () => {
                         >
                             {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
                         </button>
-                        <button className="admin-notif-btn">
+                        <Link to="/admin/notifications" className="admin-notif-btn">
                             <Bell size={20} />
                             <span className="notif-badge">2</span>
-                        </button>
-                        <div className="admin-avatar">AD</div>
+                        </Link>
+                        <Link to="/admin/profile" className="admin-topbar-avatar">AD</Link>
                     </div>
                 </header>
 

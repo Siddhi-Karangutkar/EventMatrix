@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import { Menu, Bell, Sun, Moon } from 'lucide-react';
 import ClubSidebar from './ClubSidebar';
 import './ClubLayout.css';
@@ -31,11 +31,11 @@ const ClubLayout = () => {
                         >
                             {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
                         </button>
-                        <button className="club-notif-btn">
+                        <Link to="/club/notifications" className="club-notif-btn">
                             <Bell size={20} />
                             <span className="notif-badge">3</span>
-                        </button>
-                        <div className="club-avatar">CB</div>
+                        </Link>
+                        <Link to="/club/profile" className="club-avatar">CB</Link>
                     </div>
                 </header>
 

@@ -13,14 +13,21 @@ import {
     User,
     LogOut,
     Building2,
-    Bell
+    Bell,
+    Settings
 } from 'lucide-react';
+import { toast } from 'react-toastify';
 import './ClubSidebar.css';
 
 const ClubSidebar = ({ isOpen, setIsOpen }) => {
     const navigate = useNavigate();
 
-    const handleLogout = () => navigate('/');
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        toast.info('Logged out from Club Portal');
+        navigate('/club/login', { replace: true });
+    };
 
     const navLinks = [
         { name: 'Dashboard', path: '/club/dashboard', icon: <LayoutDashboard size={20} /> },
@@ -28,6 +35,7 @@ const ClubSidebar = ({ isOpen, setIsOpen }) => {
         { name: 'Create Events', path: '/club/create-event', icon: <CalendarPlus size={20} /> },
         // { name: 'Events Posted', path: '/club/posted-events', icon: <Building2 size={20} /> },
         { name: 'Approved/Rejected', path: '/club/event-status', icon: <CalendarCheck size={20} /> },
+        { name: 'Manage Events', path: '/club/manage-events', icon: <Settings size={20} /> },
         { name: 'Notifications', path: '/club/notifications', icon: <Bell size={20} /> },
         { name: 'Certificate Gen', path: '/club/certificates', icon: <Award size={20} /> },
         { name: 'Emergency Announcement', path: '/club/announcements', icon: <Megaphone size={20} /> },

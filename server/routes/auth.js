@@ -13,11 +13,33 @@ const Admin = require('../models/Admin');
 // Student Register
 router.post('/student/register', async (req, res) => {
     try {
-        const { name, email, password, collegeCode } = req.body;
+        const { name, email, password, studentId, collegeCode } = req.body;
+
+        // Fetch official admin college code
+        let admin = await Admin.findOne({});
+        
+        if (!admin) {
+            return res.status(400).json({ message: 'System not initialized. Please contact administrator.' });
+        }
+
+        if (!admin.collegeCode) {
+            return res.status(400).json({ message: 'College Code not yet set by administrator.' });
+        }
+        
+        const providedCode = collegeCode ? collegeCode.trim().toUpperCase() : '';
+        const officialCode = admin.collegeCode.trim().toUpperCase();
+
+        if (providedCode !== officialCode) {
+            return res.status(400).json({ message: `Invalid College Code. Verification failed. Expected format similar to: ${admin.collegeCode}` });
+        }
+
+        if (!studentId) {
+            return res.status(400).json({ message: 'Student ID is required' });
+        }
 
         // Check if student exists
-        let student = await Student.findOne({ email });
-        if (student) return res.status(400).json({ message: 'Student already exists' });
+        let student = await Student.findOne({ $or: [{ email }, { studentId }] });
+        if (student) return res.status(400).json({ message: 'Student with this email or ID already exists' });
 
         // Hash password
         const salt = await bcrypt.genSalt(10);
@@ -28,6 +50,7 @@ router.post('/student/register', async (req, res) => {
             name,
             email,
             password: hashedPassword,
+            studentId,
             collegeCode
         });
 
@@ -69,9 +92,22 @@ router.post('/club/register', async (req, res) => {
     try {
         const { name, headName, email, password, collegeCode, description } = req.body;
 
-        // Verify College Code (matching with the one stored in Admin or CollegeCode collection)
-        // For now, let's assume we store it in a dedicated collection or we manually check
-        // Actually, I'll allow it for now if it exists, but the user expects it to be validated.
+        let admin = await Admin.findOne({});
+
+        if (!admin) {
+            return res.status(400).json({ message: 'System not initialized. Please contact administrator.' });
+        }
+
+        if (!admin.collegeCode) {
+            return res.status(400).json({ message: 'College Code not yet set by administrator.' });
+        }
+        
+        const providedCode = collegeCode ? collegeCode.trim().toUpperCase() : '';
+        const officialCode = admin.collegeCode.trim().toUpperCase();
+
+        if (providedCode !== officialCode) {
+            return res.status(400).json({ message: `Invalid College Code. Verification failed. Expected: ${admin.collegeCode}` });
+        }
 
         let club = await Club.findOne({ email });
         if (club) return res.status(400).json({ message: 'Club already registered with this email' });
@@ -123,14 +159,42 @@ router.post('/club/login', async (req, res) => {
 /* ── ADMIN AUTH ──────────────────────────────────────────── */
 
 router.post('/admin/login', async (req, res) => {
-    const { email, password } = req.body;
+    try {
+        const { email, password } = req.body;
 
-    if (email === 'admin@gmail.com' && password === 'admin') {
-        const token = jwt.sign({ role: 'admin' }, process.env.JWT_SECRET, { expiresIn: '1d' });
-        return res.json({ token, role: 'admin' });
+        // For simplicity, we check against the default admin credentials
+        // In a real app, you'd use bcrypt and find the admin in the database
+        if (email === 'admin@gmail.com') {
+            let admin = await Admin.findOne({ email: 'admin@gmail.com' });
+            
+            // If the admin doesn't exist in the database yet, create it with hashed password
+            if (!admin) {
+                const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hash('admin', salt);
+                admin = new Admin({
+                    email: 'admin@gmail.com',
+                    password: hashedPassword,
+                    name: 'System Administrator'
+                });
+                await admin.save();
+            }
+
+            // Verify password
+            const isMatch = await bcrypt.compare(password, admin.password);
+            if (!isMatch) return res.status(400).json({ message: 'Invalid admin credentials' });
+
+            const token = jwt.sign({ id: admin._id, role: 'admin' }, process.env.JWT_SECRET, { expiresIn: '1d' });
+            return res.json({ 
+                token, 
+                user: { id: admin._id, name: admin.name, email: admin.email, role: 'admin' } 
+            });
+        }
+
+        res.status(400).json({ message: 'Invalid admin credentials' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error during admin login' });
     }
-
-    res.status(400).json({ message: 'Invalid admin credentials' });
 });
 
 module.exports = router;

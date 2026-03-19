@@ -25,11 +25,6 @@ const ClubRegister = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const storedCC = localStorage.getItem('collegeCode');
-        if (formData.collegeCode !== storedCC) {
-            return toast.error("Invalid college code! Please enter the code provided by your administrator.");
-        }
-
         if (formData.password !== formData.confirmPassword) {
             return toast.error("Passwords don't match!");
         }

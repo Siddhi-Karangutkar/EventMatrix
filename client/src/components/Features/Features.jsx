@@ -1,5 +1,5 @@
 import React from 'react';
-import { QrCode, TrendingUp, BarChart3, ShieldAlert, Award, Search, Layout } from 'lucide-react';
+import { Hash, TrendingUp, BarChart3, ShieldAlert, Award, Search, Layout } from 'lucide-react';
 import './Features.css';
 
 const features = [
@@ -10,9 +10,9 @@ const features = [
         color: "blue"
     },
     {
-        icon: <QrCode size={24} />,
-        title: "QR Attendance",
-        description: "One-scan attendance system. Fast, secure, and completely eliminates manual verification.",
+        icon: <Hash size={24} />,
+        title: "Code Attendance",
+        description: "Secure code-based attendance system. Fast, reliable, and completely eliminates manual verification.",
         color: "purple"
     },
     {
@@ -68,7 +68,7 @@ const Features = () => {
                     ))}
                 </div>
 
-                <div className="interactive-demo glass-panel mt-16">
+                <div id="portals" className="interactive-demo glass-panel mt-16">
                     <div className="demo-content">
                         <h3>Three Dedicated Portals</h3>
                         <p>A unified platform tailored to the needs of every stakeholder.</p>
