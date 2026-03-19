@@ -21,9 +21,16 @@ router.put('/approve-club/:id', async (req, res) => {
         if (!club) return res.status(404).json({ message: 'Club not found' });
 
         // Send approval email
-        await sendApprovalEmail(club.email, club.name, club.headName);
+        const emailSent = await sendApprovalEmail(club.email, club.name, club.headName);
 
-        res.json({ message: 'Club approved successfully and email sent', club });
+        if (emailSent) {
+            res.json({ message: 'Club approved successfully and notification email sent.', club });
+        } else {
+            res.json({ 
+                message: 'Club approved successfully, but the notification email failed to send. Please check your server SMTP settings (EMAIL_USER/EMAIL_PASS).', 
+                club 
+            });
+        }
     } catch (err) {
         res.status(500).json({ message: 'Server error approving club' });
     }
